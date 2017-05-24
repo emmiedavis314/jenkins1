@@ -11,8 +11,9 @@ pipeline {
     }
     post {
         always {
-            archive 'build/libs/**/*.jar'
-            junit 'build/reports/**/*.xml'
+            mail to: 'Emily.Davis@thomsonreuters.com',
+                subject: "TEST: ${currentBuild.fullDisplayName}",
+                body: "Something is wrong with ${env.BUILD_URL}"
         }
         success {
             echo 'This will run only if successful'
