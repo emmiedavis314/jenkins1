@@ -11,6 +11,7 @@ pipeline {
     }
     post {
         always {
+            archive 'build/libs/**/*.jar'
             junit 'build/reports/**/*.xml'
         }
         success {
