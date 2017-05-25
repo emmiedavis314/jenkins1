@@ -1,43 +1,10 @@
 pipeline {
-    agent {
-        docker { image 'node:7-alpine' }
-    }
+    agent { docker 'maven:3.3.3' }
     stages {
-        stage('Deploy - Staging') {
-            steps{
-                sh './deploy staging'
-                sh './run-smoke-tests'
+        stage('build') {
+            steps {
+                sh 'mvn --version'
             }
-        }
-        stage('Sanity Check') {
-            steps{
-                input "Does the staging environment look ok?"
-            }
-        }
-        stage('Deploy - Production') {
-            steps{
-                sh './deploy production'
-            }
-        }
-    }
-    post {
-        always {
-            mail to: 'Emily.Davis@thomsonreuters.com',
-                subject: "TEST: ${currentBuild.fullDisplayName}",
-                body: "Something is wrong with ${env.BUILD_URL}"
-        }
-        success {
-            echo 'This will run only if successful'
-        }
-        failure {
-            echo 'This will run only if failed'
-        }
-        unstable {
-            echo 'This will run only if the run was marked as unstable'
-        }
-        changed {
-            echo 'This will run only if the state of the Pipeline has changed.'
-            echo 'For example, if the Pipeline was previously failing but is now successful'
         }
     }
 }
